@@ -1,4 +1,4 @@
-package connections
+package model
 
 import (
 	"context"

@@ -1,10 +1,10 @@
-package entities
+package controller
 
 import (
 	"fmt"
 	"log"
 	"net/http"
-	"project/connections"
+	"project/model"
 
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/bson"
@@ -27,7 +27,7 @@ type user struct {
 func GetUsers(c *gin.Context) {
 	//c.IndentedJSON(http.StatusOK, users)
 	var users []*user
-	client, ctx, cancel := connections.GetConnection()
+	client, ctx, cancel := model.GetConnection()
 	defer cancel()
 	defer client.Disconnect(ctx)
 	cursor, err := client.Database("MyProject").Collection("user").Find(ctx, bson.D{})
@@ -52,7 +52,7 @@ func AddUser(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"msg": err})
 		return
 	}
-	client, ctx, cancel := connections.GetConnection()
+	client, ctx, cancel := model.GetConnection()
 	defer cancel()
 	defer client.Disconnect(ctx)
 	newUser.Id = primitive.NewObjectID()
@@ -68,7 +68,7 @@ func GetUserByEmailAndPassword(c *gin.Context) {
 	var getUser *user
 	email := c.Param("email")
 	password := c.Param("password")
-	client, ctx, cancel := connections.GetConnection()
+	client, ctx, cancel := model.GetConnection()
 	defer cancel()
 	defer client.Disconnect(ctx)
 	result := client.Database("MyProject").Collection("user").FindOne(ctx, bson.M{"email": email, "password": password})
@@ -92,7 +92,7 @@ func UpdateUser(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"msg": err})
 		return
 	}
-	client, ctx, cancel := connections.GetConnection()
+	client, ctx, cancel := model.GetConnection()
 	defer cancel()
 	defer client.Disconnect(ctx)
 
@@ -115,9 +115,9 @@ func UpdateUser(c *gin.Context) {
 }
 
 func DeleteUser(c *gin.Context) {
-	id, err := primitive.ObjectIDFromHex(c.Param("id"))
+	id, _ := primitive.ObjectIDFromHex(c.Param("id"))
 	fmt.Println()
-	client, ctx, cancel := connections.GetConnection()
+	client, ctx, cancel := model.GetConnection()
 	defer cancel()
 	defer client.Disconnect(ctx)
 	result, err := client.Database("MyProject").Collection("user").DeleteOne(ctx, bson.M{"_id": id})
@@ -141,7 +141,7 @@ func GetUserbyId(c *gin.Context) {
 		return
 	}
 	fmt.Println()
-	client, ctx, cancel := connections.GetConnection()
+	client, ctx, cancel := model.GetConnection()
 	defer cancel()
 	defer client.Disconnect(ctx)
 	result := client.Database("MyProject").Collection("user").FindOne(ctx, bson.M{"_id": id})
