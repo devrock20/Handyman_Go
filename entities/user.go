@@ -13,7 +13,7 @@ import (
 )
 
 type user struct {
-	Id           primitive.ObjectID `json:"id"`
+	Id           primitive.ObjectID `json:"_id" bson:"_id"`
 	First_name   string             `json:"first_name"`
 	Last_name    string             `json:"last_name"`
 	Phone_number int64              `json:"phone_no"`
@@ -72,7 +72,6 @@ func GetUserByEmailAndPassword(c *gin.Context) {
 	defer cancel()
 	defer client.Disconnect(ctx)
 	result := client.Database("MyProject").Collection("user").FindOne(ctx, bson.M{"email": email, "password": password})
-	fmt.Println(result)
 	if result == nil {
 		c.JSON(http.StatusNotFound, gin.H{"msg": "User not Found"})
 		return
@@ -101,7 +100,7 @@ func UpdateUser(c *gin.Context) {
 		"$set": updateUser,
 	}
 
-	upsert := true
+	upsert := false
 	after := options.After
 	opt := options.FindOneAndUpdateOptions{
 		Upsert:         &upsert,
@@ -113,4 +112,47 @@ func UpdateUser(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, updateUser)
+}
+
+func DeleteUser(c *gin.Context) {
+	id, err := primitive.ObjectIDFromHex(c.Param("id"))
+	fmt.Println()
+	client, ctx, cancel := connections.GetConnection()
+	defer cancel()
+	defer client.Disconnect(ctx)
+	result, err := client.Database("MyProject").Collection("user").DeleteOne(ctx, bson.M{"_id": id})
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"msg": err})
+		return
+	}
+	fmt.Println(result)
+	if result == nil {
+		c.JSON(http.StatusNoContent, gin.H{"msg": "User not Deleted"})
+		return
+	}
+	c.JSON(http.StatusNoContent, result)
+}
+
+func GetUserbyId(c *gin.Context) {
+	var getUser *user
+	id, err := primitive.ObjectIDFromHex(c.Param("id"))
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"msg": err})
+		return
+	}
+	fmt.Println()
+	client, ctx, cancel := connections.GetConnection()
+	defer cancel()
+	defer client.Disconnect(ctx)
+	result := client.Database("MyProject").Collection("user").FindOne(ctx, bson.M{"_id": id})
+	if result == nil {
+		c.JSON(http.StatusNotFound, gin.H{"msg": "User not Found"})
+		return
+	}
+	error := result.Decode(&getUser)
+	if error != nil {
+		c.JSON(http.StatusNotFound, gin.H{"msg": "User not found"})
+		return
+	}
+	c.JSON(http.StatusOK, getUser)
 }
