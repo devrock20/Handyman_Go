@@ -87,7 +87,7 @@ func GetUserByEmailAndPassword(c *gin.Context) {
 func UpdateUser(c *gin.Context) {
 	var updateUser *user
 
-	if err := c.BindJSON(&updateUser); err != nil {
+	if err := c.Bind(&updateUser); err != nil {
 		log.Print(err)
 		c.JSON(http.StatusBadRequest, gin.H{"msg": err})
 		return
