@@ -13,15 +13,15 @@ import (
 )
 
 type user struct {
-	Id           primitive.ObjectID `json:"_id" bson:"_id"`
-	First_name   string             `json:"first_name"`
-	Last_name    string             `json:"last_name"`
-	Phone_number int64              `json:"phone_no"`
-	Email        string             `json:"email"`
-	Address      string             `json:"address"`
-	City         string             `json:"city"`
-	State        string             `json:"state"`
-	Password     string             `json:"password"`
+	Id           primitive.ObjectID `json:"_id" bson:"_id" form:"_id"`
+	First_name   string             `json:"first_name" form:"first_name"`
+	Last_name    string             `json:"last_name" form:"last_name"`
+	Phone_number int64              `json:"phone_no" form:"phone_no"`
+	Email        string             `json:"email" form:"email"`
+	Address      string             `json:"address" form:"address"`
+	City         string             `json:"city" form:"city"`
+	State        string             `json:"state" form:"state"`
+	Password     string             `json:"password" form:"password"`
 }
 
 func GetUsers(c *gin.Context) {
@@ -47,7 +47,7 @@ func GetUsers(c *gin.Context) {
 func AddUser(c *gin.Context) {
 	var newUser *user
 
-	if err := c.BindJSON(&newUser); err != nil {
+	if err := c.Bind(&newUser); err != nil {
 		log.Print(err)
 		c.JSON(http.StatusBadRequest, gin.H{"msg": err})
 		return
