@@ -12,7 +12,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-type worker struct {
+type Worker struct {
 	Id           primitive.ObjectID `json:"_id" bson:"_id" form:"_id"`
 	First_name   string             `json:"first_name" form:"first_name"`
 	Last_name    string             `json:"last_name" form:"last_name"`
@@ -26,7 +26,7 @@ type worker struct {
 
 func GetAllWorkers(c *gin.Context) {
 	//c.IndentedJSON(http.StatusOK, users)
-	var workers []*worker
+	var workers []*Worker
 	client, ctx, cancel := model.GetConnection()
 	defer cancel()
 	defer client.Disconnect(ctx)
@@ -45,12 +45,26 @@ func GetAllWorkers(c *gin.Context) {
 }
 
 func AddWorker(c *gin.Context) {
-	var newWorker *worker
+	var newWorker *Worker
 	if err := c.Bind(&newWorker); err != nil {
 		log.Print(err)
 		c.JSON(http.StatusBadRequest, gin.H{"msg": err})
 		return
 	}
+	// newWorker = c.MustGet("newWorker").(Worker)
+	// hashedPassoword, error := bcrypt.GenerateFromPassword([]byte(newWorker.Password), bcrypt.DefaultCost)
+	// if error != nil {
+	// 	c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": "Unable to create hashed password for the provided password"})
+	// }
+
+	// hasherr := bcrypt.CompareHashAndPassword([]byte(hashedPassoword), []byte(newWorker.Password))
+	// if hasherr != nil {
+	// 	c.AbortWithStatusJSON(400, gin.H{"error": "Username or password is incorrect!"})
+	// }
+	// fmt.Println("hash", hasherr)
+
+	// newWorker.Password = string(hashedPassoword)
+
 	client, ctx, cancel := model.GetConnection()
 	defer cancel()
 	defer client.Disconnect(ctx)
@@ -68,7 +82,7 @@ func AddWorker(c *gin.Context) {
 }
 
 func GetWorkerById(c *gin.Context) {
-	var getWorker *worker
+	var getWorker *Worker
 	id, err := primitive.ObjectIDFromHex(c.Param("id"))
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"msg": err})
@@ -92,7 +106,7 @@ func GetWorkerById(c *gin.Context) {
 }
 
 func UpdateWorker(c *gin.Context) {
-	var updateWorker *worker
+	var updateWorker *Worker
 	// c.Request.URL.Query()
 	if err := c.Bind(&updateWorker); err != nil {
 		log.Print(err)
@@ -138,4 +152,49 @@ func DeleteWorker(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusNoContent, result)
+}
+func WorkerLogin(c *gin.Context) {
+	var getWorker *Worker
+	email := c.PostForm("email")
+	password := c.PostForm("password")
+	client, ctx, cancel := model.GetConnection()
+	defer cancel()
+	defer client.Disconnect(ctx)
+	result := client.Database("MyProject").Collection("handyman").FindOne(ctx, bson.M{"email": email, "password": password})
+	if result == nil {
+		c.JSON(http.StatusNotFound, gin.H{"msg": "User not Found"})
+		return
+	}
+	err := result.Decode(&getWorker)
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"msg": "User not found"})
+		return
+	}
+	c.JSON(http.StatusOK, getWorker)
+
+}
+
+func GetWorkerByEmailAndPassword(c *gin.Context) {
+	var getWorker *Worker
+	// email := c.Param("email")
+	// password := c.Param("password")
+	email := c.PostForm("email")
+	password := c.PostForm("password")
+	fmt.Println("email", email)
+	fmt.Println("password", password)
+
+	client, ctx, cancel := model.GetConnection()
+	defer cancel()
+	defer client.Disconnect(ctx)
+	result := client.Database("MyProject").Collection("handyman").FindOne(ctx, bson.M{"email": email, "password": password})
+	if result == nil {
+		c.JSON(http.StatusNotFound, gin.H{"msg": "User not Found"})
+		return
+	}
+	err := result.Decode(&getWorker)
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"msg": "User not found"})
+		return
+	}
+	c.JSON(http.StatusOK, getWorker)
 }
