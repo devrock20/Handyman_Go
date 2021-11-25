@@ -46,7 +46,6 @@ func GetUsers(c *gin.Context) {
 
 func AddUser(c *gin.Context) {
 	var newUser *user
-
 	if err := c.Bind(&newUser); err != nil {
 		log.Print(err)
 		c.JSON(http.StatusBadRequest, gin.H{"msg": err})
@@ -61,7 +60,11 @@ func AddUser(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"msg": err})
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{"id": result.InsertedID.(primitive.ObjectID)})
+	c.HTML(http.StatusOK, "login.tmpl", gin.H{
+		"message": "User Succesfully registered",
+		"id":      result.InsertedID.(primitive.ObjectID),
+	})
+	//c.JSON(http.StatusOK, gin.H{"id": result.InsertedID.(primitive.ObjectID)})
 }
 
 func GetUserByEmailAndPassword(c *gin.Context) {
@@ -155,4 +158,16 @@ func GetUserbyId(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, getUser)
+}
+
+func ViewLogin(c *gin.Context) {
+	c.HTML(http.StatusOK, "login.tmpl", gin.H{
+		"title": "Main website",
+	})
+}
+
+func NewUser(c *gin.Context) {
+	c.HTML(http.StatusOK, "register.tmpl", gin.H{
+		"title": "Main website",
+	})
 }

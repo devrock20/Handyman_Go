@@ -8,7 +8,11 @@ import (
 
 func main() {
 	server := gin.Default()
+	server.LoadHTMLGlob("templates/*")
 
+	server.Static("/css", "public/css")
+	site := server.Group("/")
+	router.MainRoutes(site)
 	user := server.Group("/users")
 	router.UserRoutes(user)
 	worker := server.Group("/workers")

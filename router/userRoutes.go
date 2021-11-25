@@ -8,7 +8,9 @@ import (
 
 func UserRoutes(rg *gin.RouterGroup) {
 	user := rg.Group("/")
-	user.GET("/", controller.GetUsers)
+	//user.GET("/", controller.GetUsers)
+	user.GET("/login", controller.ViewLogin)
+	user.GET("/new", controller.NewUser)
 	user.POST("/", controller.AddUser)
 	user.GET("/authenticate/:email/:password", controller.GetUserByEmailAndPassword)
 	user.PUT("/", controller.UpdateUser)
