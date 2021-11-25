@@ -14,7 +14,6 @@ func WorkerRoutes(rg *gin.RouterGroup) {
 	worker.GET("/worker/:id", controller.GetWorkerById)
 	worker.PUT("/updateWorker", controller.UpdateWorker)
 	worker.DELETE("/:id", controller.DeleteWorker)
-	// worker.GET("/login", controller.GetUserByEmailAndPassword)
-
+	worker.GET("/login", controller.ViewWorkerLogin)
 	worker.POST("/login", controller.WorkerLogin)
 }

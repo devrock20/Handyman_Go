@@ -153,6 +153,7 @@ func DeleteWorker(c *gin.Context) {
 	}
 	c.JSON(http.StatusNoContent, result)
 }
+
 func WorkerLogin(c *gin.Context) {
 	var getWorker *Worker
 	email := c.PostForm("email")
@@ -197,4 +198,10 @@ func GetWorkerByEmailAndPassword(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, getWorker)
+}
+
+func ViewWorkerLogin(c *gin.Context) {
+	c.HTML(http.StatusOK, "workerLogin.tmpl", gin.H{
+		"title": "Main website",
+	})
 }
