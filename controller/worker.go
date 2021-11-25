@@ -10,6 +10,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo/options"
+	"golang.org/x/crypto/bcrypt"
 )
 
 type Worker struct {
@@ -52,10 +53,10 @@ func AddWorker(c *gin.Context) {
 		return
 	}
 	// newWorker = c.MustGet("newWorker").(Worker)
-	// hashedPassoword, error := bcrypt.GenerateFromPassword([]byte(newWorker.Password), bcrypt.DefaultCost)
-	// if error != nil {
-	// 	c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": "Unable to create hashed password for the provided password"})
-	// }
+	hashedPassword, error := bcrypt.GenerateFromPassword([]byte(newWorker.Password), bcrypt.DefaultCost)
+	if error != nil {
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": "Unable to create hashed password for the provided password"})
+	}
 
 	// hasherr := bcrypt.CompareHashAndPassword([]byte(hashedPassoword), []byte(newWorker.Password))
 	// if hasherr != nil {
@@ -63,7 +64,7 @@ func AddWorker(c *gin.Context) {
 	// }
 	// fmt.Println("hash", hasherr)
 
-	// newWorker.Password = string(hashedPassoword)
+	newWorker.Password = string(hashedPassword)
 
 	client, ctx, cancel := model.GetConnection()
 	defer cancel()
@@ -158,36 +159,38 @@ func WorkerLogin(c *gin.Context) {
 	var getWorker *Worker
 	email := c.PostForm("email")
 	password := c.PostForm("password")
+
 	client, ctx, cancel := model.GetConnection()
 	defer cancel()
 	defer client.Disconnect(ctx)
-	result := client.Database("MyProject").Collection("handyman").FindOne(ctx, bson.M{"email": email, "password": password})
-	if result == nil {
-		c.JSON(http.StatusNotFound, gin.H{"msg": "User not Found"})
-		return
-	}
+	result := client.Database("MyProject").Collection("handyman").FindOne(ctx, bson.M{"email": email})
+
 	err := result.Decode(&getWorker)
 	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"msg": "User not found"})
+		c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"msg": "Username or Password is incorrect"})
 		return
 	}
-	c.JSON(http.StatusOK, getWorker)
+
+	error := bcrypt.CompareHashAndPassword([]byte(getWorker.Password), []byte(password))
+	if error != nil {
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "Username or password is incorrect!"})
+		return
+	}
+	c.AbortWithStatusJSON(http.StatusOK, getWorker)
 
 }
+
+// Use WorkerLogin instead of this for login authentication
 
 func GetWorkerByEmailAndPassword(c *gin.Context) {
 	var getWorker *Worker
 	// email := c.Param("email")
 	// password := c.Param("password")
-	email := c.PostForm("email")
-	password := c.PostForm("password")
-	fmt.Println("email", email)
-	fmt.Println("password", password)
 
 	client, ctx, cancel := model.GetConnection()
 	defer cancel()
 	defer client.Disconnect(ctx)
-	result := client.Database("MyProject").Collection("handyman").FindOne(ctx, bson.M{"email": email, "password": password})
+	result := client.Database("MyProject").Collection("handyman").FindOne(ctx, bson.M{"email": getWorker.Email, "password": getWorker.Password})
 	if result == nil {
 		c.JSON(http.StatusNotFound, gin.H{"msg": "User not Found"})
 		return
@@ -200,6 +203,7 @@ func GetWorkerByEmailAndPassword(c *gin.Context) {
 	c.JSON(http.StatusOK, getWorker)
 }
 
+// A login page for worker has to be created and set here
 func ViewWorkerLogin(c *gin.Context) {
 	c.HTML(http.StatusOK, "workerLogin.tmpl", gin.H{
 		"title": "Main website",
