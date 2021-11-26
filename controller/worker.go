@@ -167,7 +167,7 @@ func WorkerLogin(c *gin.Context) {
 
 	err := result.Decode(&getWorker)
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"msg": "Username or Password is incorrect"})
+		c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"msg": "Username is incorrect"})
 		return
 	}
 
