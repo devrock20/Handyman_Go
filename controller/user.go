@@ -69,8 +69,8 @@ func AddUser(c *gin.Context) {
 
 func GetUserByEmailAndPassword(c *gin.Context) {
 	var getUser *user
-	email := c.Param("email")
-	password := c.Param("password")
+	email := c.PostForm("email")
+	password := c.PostForm("password")
 	client, ctx, cancel := model.GetConnection()
 	defer cancel()
 	defer client.Disconnect(ctx)
@@ -84,7 +84,11 @@ func GetUserByEmailAndPassword(c *gin.Context) {
 		c.JSON(http.StatusNotFound, gin.H{"msg": "User not found"})
 		return
 	}
-	c.JSON(http.StatusOK, getUser)
+	log.Print(result)
+	c.HTML(http.StatusOK, "handyman.tmpl", gin.H{
+		"message": "User Succesfully logged",
+	})
+	//c.JSON(http.StatusOK, getUser)
 }
 
 func UpdateUser(c *gin.Context) {
