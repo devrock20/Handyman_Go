@@ -1,0 +1,43 @@
+{{include "partials/header"}}
+            <div class="mainContent">
+                <form>
+                    <table>
+                        <tr>
+                            <td><label for="firstName">First Name</label></td>
+                            <td><input type="text" id="firstName" name="first_name" class = "fixed-width" required></td>
+                        </tr>
+                        <tr>
+                            <td><label for="lastName">Last Name</label></td>
+                            <td><input type="text" id="lastName" name="last_name" class = "fixed-width" required></td>
+                        </tr>
+                        <tr>
+                            <td><label for="email">Email</label></td>
+                            <td><input type="email" id="email" name="email" class = "fixed-width" required></td>
+                        </tr>
+                        <tr>
+                            <td><label for="password">Password</label></td>
+                            <td><input type="password" id="password" name="password" class = "fixed-width" minlength="8" required></td>
+                        </tr>
+                        <tr>
+                            <td><label for="state">State</label></td>
+                            <td><input type="text" id="state" name="state" class = "fixed-width"  required></td>
+                        </tr>
+                        <tr>
+                            <td><label for="city">City</label></td>
+                            <td><input type="text" id="state" name="city" class = "fixed-width"  required></td>
+                        </tr>
+                         <tr>
+                            <td><label for="address">Address</label></td>
+                            <td><input type="text" id="address" name="address" class = "fixed-width"  required></td>
+                        </tr>
+                         <tr>
+                            <td><label for="phone_no">Phone_no</label></td>
+                            <td><input type="text" id="phone_no" name="phone_no" class = "fixed-width"  required></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" class = "align-right"><button type="submit" formmethod="POST" formaction="/users" >Sign Up</button></td>
+                        </tr>
+                    </table>
+                </form>
+            </div>
+{{include "partials/footer"}}

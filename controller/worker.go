@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"encoding/hex"
 	"fmt"
 	"log"
 	"net/http"
@@ -37,12 +38,19 @@ func GetAllWorkers(c *gin.Context) {
 		return
 	}
 	defer cursor.Close(ctx)
+
 	err = cursor.All(ctx, &workers)
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"msg": err})
 		return
 	}
-	c.HTML(http.StatusOK, "workers/show", gin.H{"workers": workers})
+
+	c.HTML(http.StatusOK, "workers/show", gin.H{
+		"workers": workers,
+		"hex": func(id primitive.ObjectID) string {
+			return hex.EncodeToString(id[:])
+		},
+	})
 }
 
 func AddWorker(c *gin.Context) {
@@ -79,7 +87,7 @@ func AddWorker(c *gin.Context) {
 	// 	"message": "User Succesfully registered",
 	// 	"id":      result.InsertedID.(primitive.ObjectID),
 	// })
-	c.JSON(http.StatusOK, gin.H{"id": result.InsertedID.(primitive.ObjectID)})
+	//c.JSON(http.StatusOK, gin.H{"id": result.InsertedID.(primitive.ObjectID)})
 	c.HTML(http.StatusOK, "workers/show", gin.H{
 		"id": result.InsertedID.(primitive.ObjectID)})
 }
@@ -91,6 +99,7 @@ func GetWorkerById(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"msg": err})
 		return
 	}
+	fmt.Println(id)
 	// fmt.Println()
 	client, ctx, cancel := model.GetConnection()
 	defer cancel()
@@ -105,7 +114,17 @@ func GetWorkerById(c *gin.Context) {
 		c.JSON(http.StatusNotFound, gin.H{"msg": "User not found"})
 		return
 	}
-	c.JSON(http.StatusOK, getWorker)
+	//c.JSON(http.StatusOK, getWorker)
+	c.HTML(http.StatusOK, "workers/edit", gin.H{"worker": getWorker,
+		"First_name":   getWorker.First_name,
+		"Last_name":    getWorker.Last_name,
+		"Email":        getWorker.Email,
+		"WorkType":     getWorker.WorkType,
+		"City":         getWorker.City,
+		"State":        getWorker.State,
+		"Password":     getWorker.Password,
+		"Phone_number": getWorker.Phone_number,
+	})
 }
 
 func UpdateWorker(c *gin.Context) {
