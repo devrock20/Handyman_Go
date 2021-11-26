@@ -97,7 +97,12 @@ func GetUserByEmailAndPassword(c *gin.Context) {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "Username or password is incorrect!"})
 		return
 	}
-	c.JSON(http.StatusOK, getUser)
+	// c.JSON(http.StatusOK, getUser)
+	// log.Print(result)
+	c.HTML(http.StatusOK, "handyman.tmpl", gin.H{
+		"message": "User Succesfully logged",
+	})
+	//c.JSON(http.StatusOK, getUser)
 }
 
 func UpdateUser(c *gin.Context) {
@@ -141,7 +146,7 @@ func DeleteUser(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"msg": err})
 		return
 	}
-	fmt.Println(result)
+	// fmt.Println(result)
 	if result == nil {
 		c.JSON(http.StatusNoContent, gin.H{"msg": "User not Deleted"})
 		return
