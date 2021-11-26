@@ -42,7 +42,7 @@ func GetAllWorkers(c *gin.Context) {
 		c.JSON(http.StatusNotFound, gin.H{"msg": err})
 		return
 	}
-	c.JSON(http.StatusOK, workers)
+	c.HTML(http.StatusOK, "workers/show", gin.H{"workers": workers})
 }
 
 func AddWorker(c *gin.Context) {
@@ -80,6 +80,8 @@ func AddWorker(c *gin.Context) {
 	// 	"id":      result.InsertedID.(primitive.ObjectID),
 	// })
 	c.JSON(http.StatusOK, gin.H{"id": result.InsertedID.(primitive.ObjectID)})
+	c.HTML(http.StatusOK, "workers/show", gin.H{
+		"id": result.InsertedID.(primitive.ObjectID)})
 }
 
 func GetWorkerById(c *gin.Context) {
@@ -206,6 +208,13 @@ func GetWorkerByEmailAndPassword(c *gin.Context) {
 // A login page for worker has to be created and set here
 func ViewWorkerLogin(c *gin.Context) {
 	c.HTML(http.StatusOK, "workerLogin.tmpl", gin.H{
+		"title": "Main website",
+	})
+}
+
+// function to view new worker creation
+func ViewWorkerNew(c *gin.Context) {
+	c.HTML(http.StatusOK, "workers/new", gin.H{
 		"title": "Main website",
 	})
 }

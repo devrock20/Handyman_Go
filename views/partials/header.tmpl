@@ -10,11 +10,17 @@
                 <td><a href="index.html"><img class="logoImg" src="https://picsum.photos/100/100" alt="LOGO of website"></a></td>
                 <td class="title">Handymen</td>
                 <td class="userNav">
-				    <a class="link" href="/users/login">Login</a>
+                {{if .user}}
+				    <a class="link" href="/workers/new">Create New handyman</a>
+				    <a class="link" href="/users/profile">Profile</a>
+                {{else}}
+                    <a class="link" href="/users/login">Login</a>
 				    <a class="link" href="/users/new">Register</a>
+                {{end}}
                 </td>
             </tr>
             <tr class="genNav" >
-                <td colspan="3"><a class="link" href="handymen.html">Handymen</a></td>
+                <td colspan="3"><a class="link" href="/workers">Handymen</a></td>
             </tr>
         </table>
+

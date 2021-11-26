@@ -1,74 +1,82 @@
 body {
-    margin: 0;
-    font-family: Arial, Helvetica, sans-serif;
-    background-color: #D7CEC7
-  }
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  background-color: #d7cec7;
+}
 
 .webHeader {
-    background-color: black;
-    width:100%;
-    top:0;
+  background-color: black;
+  width: 100%;
+  top: 0;
 }
-.logoImg{
-    display: block;
-    width: 125px;
-    height:125px;
+.logoImg {
+  display: block;
+  width: 125px;
+  height: 125px;
 }
-.title{
-    color: whitesmoke;
-    font-size: 50px;
-    font-family: candara;
-    width: 50%;
+.title {
+  color: whitesmoke;
+  font-size: 50px;
+  font-family: candara;
+  width: 50%;
 }
-.userNav{
-    overflow: hidden;
-    text-align: right;
-    width:30%;
+.userNav {
+  overflow: hidden;
+  text-align: right;
+  width: 30%;
 }
 .link {
-	color:rgb(220, 235, 11);	
-	text-align: right;
-	padding: 14px 16px; 
-	text-decoration: none;
-    font-family: Candara;
-	font-size: 20px;	
+  color: rgb(220, 235, 11);
+  text-align: right;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-family: Candara;
+  font-size: 20px;
 }
-.genNav{
-    background-color: rgba(27, 4, 53, 0.897);
+.genNav {
+  background-color: rgba(27, 4, 53, 0.897);
 }
 
 .footer {
-    color: white;
-    background-color: rgb(3, 3, 3);
-    text-align: center;
-    padding: 10px;
-    width: 100%;
-    position: fixed;
-    bottom: 0;
-    left: 0;
-  }
+  color: white;
+  background-color: rgb(3, 3, 3);
+  text-align: center;
+  padding: 10px;
+  width: 100%;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+}
 ul {
-    margin-left: 100px;
-    color: khaki;
-    font-size: 40px;
+  margin-left: 100px;
+  color: khaki;
+  font-size: 40px;
 }
-.mainContent{
-    padding-left: 20px;
-    padding-top: 20px;
+.mainContent {
+  padding-left: 20px;
+  padding-top: 20px;
 }
-.categoryImage{
-    align-content: center;
+.categoryImage {
+  align-content: center;
 }
-.button{
-    font-size: 20px;
+.button {
+  font-size: 20px;
 }
-.connectionButtons{
-    float: right;
+.connectionButtons {
+  float: right;
 }
-.newConnectionForm{
-    margin-left: 100px;
-    color: black;
+.newConnectionForm {
+  margin-left: 100px;
+  color: black;
 }
-.fixed-width{
-    width: 300px;
-    }
+.fixed-width {
+  width: 300px;
+}
+
+table,
+th,
+td {
+  border: 1px solid black;
+  border-collapse: collapse;
+  padding: 15px;
+}

@@ -1,0 +1,15 @@
+{{include "partials/header"}}
+ <div class="mainContent">
+                <p class="intro"> Welcome {{.user}} </p>
+                <table>
+                {{range .workers}}
+                <tr>
+                <td>Name : {{ .First_name}} {{.Last_name}} </td>
+                <td>Work Type : {{.WorkType}} </td>
+                <td>Phone_no : {{.Phone_number}} </td>
+                <td>Email : {{.Email}} </td>
+                </tr>
+                {{end}}
+                </table>
+            </div>
+{{include "partials/footer"}}

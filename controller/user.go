@@ -191,3 +191,9 @@ func NewUser(c *gin.Context) {
 		"title": "Main website",
 	})
 }
+
+func ViewProfile(c *gin.Context) {
+	c.HTML(http.StatusOK, "user/profile.tmpl", gin.H{
+		"title": "Main website",
+	})
+}

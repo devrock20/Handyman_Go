@@ -10,7 +10,8 @@ func WorkerRoutes(rg *gin.RouterGroup) {
 	worker := rg.Group("/")
 
 	worker.POST("/", controller.AddWorker)
-	worker.GET("/", controller.GetAllWorkers)
+	worker.GET("/new", controller.ViewWorkerNew)
+	worker.GET("/show", controller.GetAllWorkers)
 	worker.GET("/worker/:id", controller.GetWorkerById)
 	worker.PUT("/updateWorker", controller.UpdateWorker)
 	worker.DELETE("/:id", controller.DeleteWorker)
