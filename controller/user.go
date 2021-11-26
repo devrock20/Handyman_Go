@@ -84,9 +84,10 @@ func GetUserByEmailAndPassword(c *gin.Context) {
 		c.JSON(http.StatusNotFound, gin.H{"msg": "User not found"})
 		return
 	}
-	log.Print(result)
-	c.HTML(http.StatusOK, "handyman.tmpl", gin.H{
+	log.Print(err)
+	c.HTML(http.StatusOK, "user/profile", gin.H{
 		"message": "User Succesfully logged",
+		"user":    getUser.First_name,
 	})
 	//c.JSON(http.StatusOK, getUser)
 }
@@ -165,13 +166,13 @@ func GetUserbyId(c *gin.Context) {
 }
 
 func ViewLogin(c *gin.Context) {
-	c.HTML(http.StatusOK, "login.tmpl", gin.H{
+	c.HTML(http.StatusOK, "user/login.tmpl", gin.H{
 		"title": "Main website",
 	})
 }
 
 func NewUser(c *gin.Context) {
-	c.HTML(http.StatusOK, "register.tmpl", gin.H{
+	c.HTML(http.StatusOK, "user/new.tmpl", gin.H{
 		"title": "Main website",
 	})
 }

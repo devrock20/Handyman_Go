@@ -3,13 +3,24 @@ package main
 import (
 	"project/router"
 
+	"github.com/foolin/goview"
+	"github.com/foolin/goview/supports/ginview"
 	"github.com/gin-gonic/gin"
 )
 
 func main() {
 	server := gin.Default()
-	server.LoadHTMLGlob("templates/*")
 
+	gv := goview.Config{
+		Root:         "views",
+		Extension:    ".tmpl",
+		Partials:     []string{"partials/header", "partials/footer"},
+		DisableCache: true,
+	}
+
+	//Set new instance
+
+	server.HTMLRender = ginview.New(gv)
 	server.Static("/css", "public/css")
 	site := server.Group("/")
 	router.MainRoutes(site)
