@@ -10,6 +10,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo/options"
+	"golang.org/x/crypto/bcrypt"
 )
 
 type user struct {
@@ -51,6 +52,12 @@ func AddUser(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"msg": err})
 		return
 	}
+	hashedPassword, error := bcrypt.GenerateFromPassword([]byte(newUser.Password), bcrypt.DefaultCost)
+	if error != nil {
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": "Unable to create hashed password for the provided password"})
+	}
+	newUser.Password = string(hashedPassword)
+
 	client, ctx, cancel := model.GetConnection()
 	defer cancel()
 	defer client.Disconnect(ctx)
@@ -69,12 +76,13 @@ func AddUser(c *gin.Context) {
 
 func GetUserByEmailAndPassword(c *gin.Context) {
 	var getUser *user
-	email := c.Param("email")
-	password := c.Param("password")
+	email := c.PostForm("email")
+	password := c.PostForm("password")
+
 	client, ctx, cancel := model.GetConnection()
 	defer cancel()
 	defer client.Disconnect(ctx)
-	result := client.Database("MyProject").Collection("user").FindOne(ctx, bson.M{"email": email, "password": password})
+	result := client.Database("MyProject").Collection("user").FindOne(ctx, bson.M{"email": email})
 	if result == nil {
 		c.JSON(http.StatusNotFound, gin.H{"msg": "User not Found"})
 		return
@@ -82,6 +90,11 @@ func GetUserByEmailAndPassword(c *gin.Context) {
 	err := result.Decode(&getUser)
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"msg": "User not found"})
+		return
+	}
+	error := bcrypt.CompareHashAndPassword([]byte(getUser.Password), []byte(password))
+	if error != nil {
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "Username or password is incorrect!"})
 		return
 	}
 	c.JSON(http.StatusOK, getUser)
