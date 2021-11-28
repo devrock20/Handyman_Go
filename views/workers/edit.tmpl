@@ -35,7 +35,8 @@
                             <td><input type="text" id="phone_no" name="phone_no" value = "{{.Phone_number}}"  class = "fixed-width"  required></td>
                         </tr>
                         <tr>
-                            <td colspan="2" class = "align-right"><button type="submit" formmethod="POST" formaction="/workers" >Sign Up</button></td>
+                            <td colspan="2" class = "align-right"><button type="submit" formmethod="POST" formaction="/workers/updateWorker" >Update</button></td>
+                            <input type="hidden" name="_method" value="PUT">
                         </tr>
                     </table>
                 </form>

@@ -3,6 +3,7 @@ package main
 import (
 	"project/router"
 
+	method "github.com/bu/gin-method-override"
 	"github.com/foolin/goview"
 	"github.com/foolin/goview/supports/ginview"
 	"github.com/gin-gonic/gin"
@@ -17,6 +18,7 @@ func main() {
 		Partials:     []string{"partials/header", "partials/footer"},
 		DisableCache: true,
 	}
+	server.Use(method.ProcessMethodOverride(server))
 
 	//Set new instance
 

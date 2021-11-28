@@ -5,6 +5,7 @@ go 1.17
 require github.com/gin-gonic/gin v1.7.7
 
 require (
+	github.com/bu/gin-method-override v0.0.0-20210107045130-0be2f37312dc // indirect
 	github.com/foolin/goview v0.3.0 // indirect
 	github.com/gin-contrib/sse v0.1.0 // indirect
 	github.com/go-playground/locales v0.14.0 // indirect

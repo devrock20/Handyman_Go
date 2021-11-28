@@ -88,8 +88,9 @@ func AddWorker(c *gin.Context) {
 	// 	"id":      result.InsertedID.(primitive.ObjectID),
 	// })
 	//c.JSON(http.StatusOK, gin.H{"id": result.InsertedID.(primitive.ObjectID)})
-	c.HTML(http.StatusOK, "workers/show", gin.H{
-		"id": result.InsertedID.(primitive.ObjectID)})
+	id := result.InsertedID.(primitive.ObjectID)
+	log.Print(id)
+	c.Redirect(http.StatusFound, "show")
 }
 
 func GetWorkerById(c *gin.Context) {
