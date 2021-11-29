@@ -71,7 +71,6 @@ func AddUser(c *gin.Context) {
 		"message": "User Succesfully registered",
 		"id":      result.InsertedID.(primitive.ObjectID),
 	})
-	//c.JSON(http.StatusOK, gin.H{"id": result.InsertedID.(primitive.ObjectID)})
 }
 
 func GetUserByEmailAndPassword(c *gin.Context) {
@@ -98,15 +97,13 @@ func GetUserByEmailAndPassword(c *gin.Context) {
 		return
 	}
 	c.Set("id", getUser.Id.Hex())
-	// c.JSON(http.StatusOK, getUser)
-	// log.Print(result)
+
 	log.Print(err)
 	c.HTML(http.StatusOK, "user/profile", gin.H{
 		"message": "User Succesfully logged",
 		"user":    getUser.First_name,
 		"id":      c.MustGet("id"),
 	})
-	//c.JSON(http.StatusOK, getUser)
 }
 
 func UpdateUser(c *gin.Context) {
@@ -150,7 +147,6 @@ func DeleteUser(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"msg": err})
 		return
 	}
-	// fmt.Println(result)
 	if result == nil {
 		c.JSON(http.StatusNoContent, gin.H{"msg": "User not Deleted"})
 		return
