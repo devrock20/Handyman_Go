@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"net/url"
 	"project/model"
 
 	"github.com/gin-gonic/gin"
@@ -125,17 +126,25 @@ func GetWorkerById(c *gin.Context) {
 		"State":        getWorker.State,
 		"Password":     getWorker.Password,
 		"Phone_number": getWorker.Phone_number,
+		"Id":           getWorker.Id.Hex(),
 	})
 }
 
 func UpdateWorker(c *gin.Context) {
 	var updateWorker *Worker
 	// c.Request.URL.Query()
+	id, error := primitive.ObjectIDFromHex(c.Param("id"))
+	if error != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"msg": error})
+		return
+	}
+	fmt.Println(id)
 	if err := c.Bind(&updateWorker); err != nil {
 		log.Print(err)
 		c.JSON(http.StatusBadRequest, gin.H{"msg": err})
 		return
 	}
+	updateWorker.Id = id
 	client, ctx, cancel := model.GetConnection()
 	defer cancel()
 	defer client.Disconnect(ctx)
@@ -150,12 +159,14 @@ func UpdateWorker(c *gin.Context) {
 		Upsert:         &upsert,
 		ReturnDocument: &after,
 	}
-	err := client.Database("MyProject").Collection("handyman").FindOneAndUpdate(ctx, bson.M{"_id": updateWorker.Id}, update, &opt).Decode(&updateWorker)
+	err := client.Database("MyProject").Collection("handyman").FindOneAndUpdate(ctx, bson.M{"_id": id}, update, &opt).Decode(&updateWorker)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"msg": err})
 		return
 	}
-	c.JSON(http.StatusOK, updateWorker)
+	location := url.URL{Path: "/workers/show"}
+	c.Redirect(http.StatusFound, location.RequestURI())
+
 }
 
 func DeleteWorker(c *gin.Context) {

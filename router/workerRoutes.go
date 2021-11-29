@@ -13,7 +13,7 @@ func WorkerRoutes(rg *gin.RouterGroup) {
 	worker.GET("/new", controller.ViewWorkerNew)
 	worker.GET("/show", controller.GetAllWorkers)
 	worker.GET("/:id/edit", controller.GetWorkerById)
-	worker.PUT("/updateWorker", controller.UpdateWorker)
+	worker.PUT("/updateWorker/:id", controller.UpdateWorker)
 	worker.DELETE("/:id", controller.DeleteWorker)
 	worker.GET("/login", controller.ViewWorkerLogin)
 	worker.POST("/login", controller.WorkerLogin)

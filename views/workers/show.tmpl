@@ -10,7 +10,7 @@
                 <td>Email : {{.Email}} </td>
                 <form>
                 <td><button type="submit" formmethod="GET" formaction="/workers/{{ call $.hex .Id}}/edit" >Edit</button></td>
-                <td><button type="submit" formmethod="POST" formaction="/workers/{{call $.hex .Id}}?_method=DELETE" >Delete</button></td>
+                <td><button type="submit" formmethod="PUT" formaction="/workers/{{call $.hex .Id}}?_method=DELETE" >Delete</button></td>
                 </tr>
                 </form>
                 {{end}}
