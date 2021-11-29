@@ -97,12 +97,14 @@ func GetUserByEmailAndPassword(c *gin.Context) {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "Username or password is incorrect!"})
 		return
 	}
+	c.Set("id", getUser.Id.Hex())
 	// c.JSON(http.StatusOK, getUser)
 	// log.Print(result)
 	log.Print(err)
 	c.HTML(http.StatusOK, "user/profile", gin.H{
 		"message": "User Succesfully logged",
 		"user":    getUser.First_name,
+		"id":      c.MustGet("id"),
 	})
 	//c.JSON(http.StatusOK, getUser)
 }
