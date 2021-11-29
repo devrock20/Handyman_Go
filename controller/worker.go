@@ -46,10 +46,12 @@ func GetAllWorkers(c *gin.Context) {
 		return
 	}
 
+
 	c.HTML(http.StatusOK, "workers/show", gin.H{
 		"workers": workers,
 		"hex": func(id primitive.ObjectID) string {
 			return hex.EncodeToString(id[:])
+
 		},
 	})
 }
@@ -127,6 +129,7 @@ func GetWorkerById(c *gin.Context) {
 		"Password":     getWorker.Password,
 		"Phone_number": getWorker.Phone_number,
 		"Id":           getWorker.Id.Hex(),
+                "id":      c.MustGet("id"),
 	})
 }
 
@@ -185,7 +188,8 @@ func DeleteWorker(c *gin.Context) {
 		c.JSON(http.StatusNoContent, gin.H{"msg": "User not Deleted"})
 		return
 	}
-	c.JSON(http.StatusNoContent, result)
+	location := url.URL{Path : "/workers/show"}
+	c.Redirect(http.StatusFound,location.RequestURI())
 }
 
 func WorkerLogin(c *gin.Context) {
