@@ -1,4 +1,4 @@
-# Spl_go
+# Handyman Api's
 
 ## **Sample curl requests for USER:**
 
@@ -27,4 +27,8 @@
   curl http://localhost:8080/users/user/619c2d4eab90fac374b8007c \
     --header "Content-Type: application/json" \
     --request "GET"
+    
+# Launch Application
+Run **go build** and then double click the exe file that it generates.
+ 
   
