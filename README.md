@@ -29,6 +29,8 @@
     --request "GET"
     
 # Launch Application
-Run **go build** and then double click the exe file that it generates.
+--Run **go build** and then double click the exe file that it generates.
+--Other command is **go run main.go**
+
  
   
