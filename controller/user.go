@@ -67,7 +67,7 @@ func AddUser(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"msg": err})
 		return
 	}
-	c.HTML(http.StatusOK, "login.tmpl", gin.H{
+	c.HTML(http.StatusOK, "user/login.tmpl", gin.H{
 		"message": "User Succesfully registered",
 		"id":      result.InsertedID.(primitive.ObjectID),
 	})
