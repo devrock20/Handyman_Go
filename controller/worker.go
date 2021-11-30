@@ -46,7 +46,6 @@ func GetAllWorkers(c *gin.Context) {
 		return
 	}
 
-
 	c.HTML(http.StatusOK, "workers/show", gin.H{
 		"workers": workers,
 		"hex": func(id primitive.ObjectID) string {
@@ -68,13 +67,6 @@ func AddWorker(c *gin.Context) {
 	if error != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": "Unable to create hashed password for the provided password"})
 	}
-
-	// hasherr := bcrypt.CompareHashAndPassword([]byte(hashedPassoword), []byte(newWorker.Password))
-	// if hasherr != nil {
-	// 	c.AbortWithStatusJSON(400, gin.H{"error": "Username or password is incorrect!"})
-	// }
-	// fmt.Println("hash", hasherr)
-
 	newWorker.Password = string(hashedPassword)
 
 	client, ctx, cancel := model.GetConnection()
@@ -86,11 +78,7 @@ func AddWorker(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"msg": err})
 		return
 	}
-	// c.HTML(http.StatusOK, "login.tmpl", gin.H{
-	// 	"message": "User Succesfully registered",
-	// 	"id":      result.InsertedID.(primitive.ObjectID),
-	// })
-	//c.JSON(http.StatusOK, gin.H{"id": result.InsertedID.(primitive.ObjectID)})
+
 	id := result.InsertedID.(primitive.ObjectID)
 	log.Print(id)
 	c.Redirect(http.StatusFound, "show")
@@ -104,7 +92,6 @@ func GetWorkerById(c *gin.Context) {
 		return
 	}
 	fmt.Println(id)
-	// fmt.Println()
 	client, ctx, cancel := model.GetConnection()
 	defer cancel()
 	defer client.Disconnect(ctx)
@@ -118,7 +105,7 @@ func GetWorkerById(c *gin.Context) {
 		c.JSON(http.StatusNotFound, gin.H{"msg": "User not found"})
 		return
 	}
-	//c.JSON(http.StatusOK, getWorker)
+
 	c.HTML(http.StatusOK, "workers/edit", gin.H{"worker": getWorker,
 		"First_name":   getWorker.First_name,
 		"Last_name":    getWorker.Last_name,
@@ -129,13 +116,12 @@ func GetWorkerById(c *gin.Context) {
 		"Password":     getWorker.Password,
 		"Phone_number": getWorker.Phone_number,
 		"Id":           getWorker.Id.Hex(),
-                "id":      c.MustGet("id"),
+		"id":           c.MustGet("id"),
 	})
 }
 
 func UpdateWorker(c *gin.Context) {
 	var updateWorker *Worker
-	// c.Request.URL.Query()
 	id, error := primitive.ObjectIDFromHex(c.Param("id"))
 	if error != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"msg": error})
@@ -188,8 +174,8 @@ func DeleteWorker(c *gin.Context) {
 		c.JSON(http.StatusNoContent, gin.H{"msg": "User not Deleted"})
 		return
 	}
-	location := url.URL{Path : "/workers/show"}
-	c.Redirect(http.StatusFound,location.RequestURI())
+	location := url.URL{Path: "/workers/show"}
+	c.Redirect(http.StatusFound, location.RequestURI())
 }
 
 func WorkerLogin(c *gin.Context) {
@@ -217,37 +203,12 @@ func WorkerLogin(c *gin.Context) {
 
 }
 
-// Use WorkerLogin instead of this for login authentication
-
-func GetWorkerByEmailAndPassword(c *gin.Context) {
-	var getWorker *Worker
-	// email := c.Param("email")
-	// password := c.Param("password")
-
-	client, ctx, cancel := model.GetConnection()
-	defer cancel()
-	defer client.Disconnect(ctx)
-	result := client.Database("MyProject").Collection("handyman").FindOne(ctx, bson.M{"email": getWorker.Email, "password": getWorker.Password})
-	if result == nil {
-		c.JSON(http.StatusNotFound, gin.H{"msg": "User not Found"})
-		return
-	}
-	err := result.Decode(&getWorker)
-	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"msg": "User not found"})
-		return
-	}
-	c.JSON(http.StatusOK, getWorker)
-}
-
-// A login page for worker has to be created and set here
 func ViewWorkerLogin(c *gin.Context) {
 	c.HTML(http.StatusOK, "workerLogin.tmpl", gin.H{
 		"title": "Main website",
 	})
 }
 
-// function to view new worker creation
 func ViewWorkerNew(c *gin.Context) {
 	c.HTML(http.StatusOK, "workers/new", gin.H{
 		"title": "Main website",
