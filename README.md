@@ -1,3 +1,12 @@
+# Handyman Website
+This is a simple website which lets users view all the available handymans near a particular area.
+
+# Technology Stack
+* Front End: Html, Css
+* Backend: MongoDb Atlas
+* Controller : Go Language using Gin Framework.
+
+
 # Handyman Api's
 
 ## **Sample curl requests for USER:**
